@@ -1,4 +1,5 @@
 ﻿using FluentEmail.Core;
+using FluentEmail.Razor;
 using FluentEmail.Smtp;
 using System;
 using System.Net.Mail;
@@ -25,6 +26,7 @@ namespace SendingEmailwFluentEmail
 
             // default server uses sender settings
             Email.DefaultSender = sender;
+            Email.DefaultRenderer = new RazorRenderer();
 
             // email template with stringbuilder
             StringBuilder template = new();
@@ -37,6 +39,7 @@ namespace SendingEmailwFluentEmail
                 .From("mack@weaver.com")
                 .To("mw@mailinator.com", "Matchew")
                 .Subject("Thanks")
+                .UsingTemplate(template.ToString(), new { FirstName = "Mack", ProductName = "Baconator" })
                 //.Body("You're the best.")
                 .SendAsync();
         }
