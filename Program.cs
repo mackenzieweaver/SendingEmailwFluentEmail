@@ -2,6 +2,7 @@
 using FluentEmail.Smtp;
 using System;
 using System.Net.Mail;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace SendingEmailwFluentEmail
@@ -25,12 +26,18 @@ namespace SendingEmailwFluentEmail
             // default server uses sender settings
             Email.DefaultSender = sender;
 
+            // email template with stringbuilder
+            StringBuilder template = new();
+            template.AppendLine("Dear @Model.FirstName,");
+            template.AppendLine("<p>Thanks for purchasing @Model.ProductName. We hope you enjoy it.</p>");
+            template.AppendLine("- The MackCo Team");
+
             // send an email
             var email = await Email
                 .From("mack@weaver.com")
                 .To("mw@mailinator.com", "Matchew")
                 .Subject("Thanks")
-                .Body("You're the best.")
+                //.Body("You're the best.")
                 .SendAsync();
         }
     }
