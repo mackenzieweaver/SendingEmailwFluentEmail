@@ -1,12 +1,37 @@
-﻿using System;
+﻿using FluentEmail.Core;
+using FluentEmail.Smtp;
+using System;
+using System.Net.Mail;
+using System.Threading.Tasks;
 
 namespace SendingEmailwFluentEmail
 {
     class Program
     {
-        static void Main(string[] args)
+        // use "papercut" application to listen to emails being sent
+        static async Task Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            // settings
+            var sender = new SmtpSender(() => new SmtpClient("localhost")
+            {
+                EnableSsl = false,
+                // send via email server not by file directory
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                Port = 25
+                //DeliveryMethod = SmtpDeliveryMethod.SpecifiedPickupDirectory,
+                //PickupDirectoryLocation = @"C:\Users\mackn\Documents\C#\TimCory Email Demo"
+            });
+
+            // default server uses sender settings
+            Email.DefaultSender = sender;
+
+            // send an email
+            var email = await Email
+                .From("mack@weaver.com")
+                .To("mw@mailinator.com", "Matchew")
+                .Subject("Thanks")
+                .Body("You're the best.")
+                .SendAsync();
         }
     }
 }
